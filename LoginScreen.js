@@ -22,28 +22,25 @@ export default class LoginScreen extends React.Component {
         })
 
     };
-    setValueLocally = (key, value) => {
-
-        SecureStore.setItemAsync(key, value);
+    setValueLocally = async (key, value) => {
+        await SecureStore.setItemAsync(key, value);
 
     };
 
-    getValueLocally_name = (key) => {
-
-        SecureStore.getItemAsync(key).then(
+    getValueLocally_name = async (key) => {
+        await SecureStore.getItemAsync(key).then(
                 (value) => this.setState({getName: value}))
 
     };
 
-    getValueLocally_password = (key) => {
-
-        SecureStore.getItemAsync(key).then(
+    getValueLocally_password = async (key) => {
+        await SecureStore.getItemAsync(key).then(
                 (value) => this.setState({getPass: value}))
 
     };
-    getValueLocally_has = (key) => {
+    getValueLocally_has = async (key) => {
 
-        SecureStore.getItemAsync(key).then(
+        await SecureStore.getItemAsync(key).then(
                 (value) => this.setState({hasData: value}))
 
     };
@@ -65,7 +62,6 @@ export default class LoginScreen extends React.Component {
         const {navigate} = this.props.navigation;
         if (this.state.start) {
             this.getValueLocally_name('name');
-
             this.getValueLocally_password('password');
             this.setState({start: false});
         }

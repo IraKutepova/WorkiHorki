@@ -3,6 +3,7 @@ import {
     Arrow,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View
 } from 'react-native';
 import {Constants} from 'expo';
@@ -18,8 +19,17 @@ export default class Zapros extends Component {
 
         this.state = {
             isLoading: true,
+            dollars: false
         }
+
     }
+
+    toggleDollars = () => {
+        this.setState({
+            dollars: !this.state.dollars
+        });
+
+    };
 
     componentDidMount() {
         this.getFetch();
@@ -27,7 +37,6 @@ export default class Zapros extends Component {
         this.timer = setInterval(() => {
             return this.getFetch();
         }, 600000);
-
     }
 
     componentWillUnmount() {
@@ -38,7 +47,7 @@ export default class Zapros extends Component {
         return fetch(this.props.url1, {
             method: 'GET',
             headers: {
-                'Authorization': 'Basic' + ' ' + Base64.btoa(
+                'Authorization': 'Basic ' + Base64.btoa(
                         this.props.username + ':' + this.props.password),
                 'Content-Type': 'application/json'
             }
@@ -57,11 +66,13 @@ export default class Zapros extends Component {
             return Promise.resolve(response)
         })
 
-        .then((response) => response.json())
+        .then((response) => response && response.json() || {})
         .then((responseJson) => {
 
             this.setState({
                 isLoading: false,
+                dollars: this.state.dollars,
+
                 dataSource: responseJson,
             });
         })
@@ -86,8 +97,12 @@ export default class Zapros extends Component {
             return element.date.startsWith(daytype);
         }
 
-        function timeToTime(time) {
-            (time == 0) ?
+        function timeToTime(time, dollars) {
+            if (dollars) {
+                return '$' + Math.round(time * 50 * 100) / 100.0;
+            }
+
+            (time === 0) ?
                     time = '00:00'
                     : (time < 10) ?
                     time = '0' + Math.trunc(time) + ':' + Math.ceil(
@@ -119,20 +134,23 @@ export default class Zapros extends Component {
         const {dataSource} = this.state;
 
         return (
-                <View style={styles.container}>
+                <TouchableOpacity onPress={this.toggleDollars}>
+                    <View style={styles.container}>
 
-                    <Text style={styles.clocks}>
-                        {timeToTime(dataSource[0].stats.find(
-                                isToday).hours)} </Text>
+                        <Text style={styles.clocks}>
+                            {timeToTime(dataSource[0].stats.find(
+                                    isToday).hours, this.state.dollars)} </Text>
 
-                    {dataSource.map(
-                            hit => <Text style={styles.clocks}>{timeToTime(
-                                    hit.hourWorked)}</Text>)}
+                        {dataSource.map(
+                                hit => <Text style={styles.clocks}>{timeToTime(
+                                        hit.hourWorked,
+                                        this.state.dollars)}</Text>)}
 
-                </View>
+                    </View></TouchableOpacity>
 
         );
     }
+
 }
 
 const styles = StyleSheet.create({

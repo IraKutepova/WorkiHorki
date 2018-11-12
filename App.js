@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Constants} from 'expo';
-import {StackNavigator} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation';
 import LoginScreen from './LoginScreen.js';
 import FetchUserData from './Fet1.js';
 
-const SimpleApp = StackNavigator({
+const SimpleApp = createStackNavigator({
 
     Home: {
 
@@ -24,6 +24,7 @@ const SimpleApp = StackNavigator({
 
 });
 
+// noinspection JSUnusedGlobalSymbols
 export default class App extends React.Component {
     render() {
         return <SimpleApp/>;

@@ -35,7 +35,7 @@ export default class FetchUserData extends Component {
         return fetch('http://185.185.70.210:8081/api/detail', {
             method: 'GET',
             headers: {
-                'Authorization': 'Basic' + ' ' + Base64.btoa(
+                'Authorization': 'Basic ' + Base64.btoa(
                         params.username + ':' + params.password),
                 'Content-Type': 'application/json',
             }
@@ -54,7 +54,7 @@ export default class FetchUserData extends Component {
 
             return Promise.resolve(response)
         })
-        .then((response) => response.json())
+        .then((response) => response && response.json() || {})
         .then((responseJson) => {
             this.setState({
                 isLoading: false,
@@ -68,7 +68,9 @@ export default class FetchUserData extends Component {
             });
         })
         .catch((error) => {
-            console.error(error);
+            this.setState({
+                error: error
+            });
         });
 
     }
@@ -118,7 +120,6 @@ export default class FetchUserData extends Component {
         }
 
         return (
-
                 <View style={styles.container}>
                     <View style={styles.row1}>
                         <Text style={styles.paragraph}>
@@ -134,12 +135,15 @@ export default class FetchUserData extends Component {
                         </TouchableOpacity>
                     </View>
                     <Text style={styles.textRegister}> ___________________ </Text>
-
+                    {dataSource &&
                     <Zapros url1={_setUrl(dataSource.id,
                             dataSource["assignment"].team.id,
                             dataSource["assignment"].manager.id)}
                             username={params.username}
                             password={params.password}/>
+                    || this.state.error && <Text> {JSON.stringify(
+                            this.state.error)} </Text>
+                    }
 
                 </View>
 
