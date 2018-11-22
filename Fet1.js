@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import {Constants} from 'expo';
+import {Constants, SecureStore} from 'expo';
 import React, {Component} from 'react';
 import {Base64} from 'js-base64';
 import Zapros from './Zapros';
@@ -25,18 +25,36 @@ export default class FetchUserData extends Component {
             dataArray: [],
             start1: true,
             start: true,
+		start2:'true',
+		user1: this.props.navigation.state.params.username,
+		pass1: this.props.navigation.state.params.password
 
         }
     }
+    getValueLocally_name = async (key) => {
+        await SecureStore.getItemAsync(key).then(
+                (value) => this.setState({getName1: value}))
+
+    };
+
+    getValueLocally_password = async (key) => {
+        await SecureStore.getItemAsync(key).then(
+                (value) => this.setState({getPass1: value}))
+
+    };
 
     componentDidMount() {
-        const {params} = this.props.navigation.state;
-
+	  return  this.getFetch();
+    }
+	getFetch(){
+const user=this.props.navigation.state.params.username;
+	    const pass=this.props.navigation.state.params.password;
+      
+	    
         return fetch('http://185.185.70.210:8081/api/detail', {
             method: 'GET',
             headers: {
-                'Authorization': 'Basic ' + Base64.btoa(
-                        params.username + ':' + params.password),
+                'Authorization': 'Basic ' + Base64.btoa(user+ ':' + pass),
                 'Content-Type': 'application/json',
             }
         })
@@ -84,11 +102,11 @@ export default class FetchUserData extends Component {
         };
 
         const {dataSource} = this.state;
+	    const kuku='true';
 
         function _setUrl(userId, teamId, managerId) {
             return 'http://185.185.70.210:8081/api/timetracking/timesheets?managerId=1441355&period=WEEK&teamId=857&userId=8019';
         }
-
         if (this.state.isLoading2) {
             return (
                     <View style={styles.container}>
@@ -101,7 +119,7 @@ export default class FetchUserData extends Component {
                         <TouchableOpacity
                                 style={styles.button}
                                 onPress={() => {
-                                    navigate('Home')
+                                    navigate('Home',{editYes:'true'})
                                 }}>
                             <Text style={styles.buttons}>
                                 Go to Login
@@ -118,36 +136,42 @@ export default class FetchUserData extends Component {
                     </View>
             );
         }
-
-        return (
+   
+     return (
                 <View style={styles.container}>
                     <View style={styles.row1}>
                         <Text style={styles.paragraph}>
-                            {dataSource.fullName}
+                           {dataSource.fullName}
+		
                         </Text>
                         <TouchableOpacity
                                 style={styles.button}
                                 onPress={() => {
-                                    navigate('Home')
+                                    navigate('Home',{editYes: 'true'});
+				
                                 }}>
 
                             <Image source={pic1} style={styles.images1}/>
                         </TouchableOpacity>
                     </View>
+
                     <Text style={styles.textRegister}> ___________________ </Text>
+		
                     {dataSource &&
                     <Zapros url1={_setUrl(dataSource.id,
                             dataSource["assignment"].team.id,
                             dataSource["assignment"].manager.id)}
-                            username={params.username}
-                            password={params.password}/>
+                            username={this.props.navigation.state.params.username}
+                            password={this.props.navigation.state.params.password}
+                            salary={dataSource["assignment"].salary}/>
                     || this.state.error && <Text> {JSON.stringify(
                             this.state.error)} </Text>
                     }
 
+
                 </View>
 
-        );
+        ); 
     }
 }
 

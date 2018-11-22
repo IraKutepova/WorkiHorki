@@ -3,6 +3,7 @@ import {
     Arrow,
     StyleSheet,
     Text,
+	Image,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -19,7 +20,11 @@ export default class Zapros extends Component {
 
         this.state = {
             isLoading: true,
-            dollars: false
+            dollars: false,
+            url1: 'https://banner2.kisspng.com/20180201/zxq/kisspng-dollar-sign-united-states-dollar-dollar-sign-5a737456028001.6807977015175158620103.jpg',
+            url2: 'https://cdn4.iconfinder.com/data/icons/green-shopper/1049/settings.png',
+	salary: this.props.salary	
+		
         }
 
     }
@@ -82,7 +87,15 @@ export default class Zapros extends Component {
     }
 
     render() {
-
+function ColorOfHour (hours)
+	    {
+		    if (hours<2){ return styles.clocksRed;		    
+		    }
+		    else{ if(hours<4){return styles.clocksYellow;}
+		    }
+		    return styles.clocksGreen;
+	    }
+	    
         function isToday(element, index, array) {
             const today = new Date();
             let day = '';
@@ -97,9 +110,9 @@ export default class Zapros extends Component {
             return element.date.startsWith(daytype);
         }
 
-        function timeToTime(time, dollars) {
-            if (dollars) {
-                return '$' + Math.round(time * 50 * 100) / 100.0;
+        function timeToTime(time, dollars,salary) {
+		if (dollars) {
+                return '$' + Math.round(time * salary * 100) / 100.0;
             }
 
             (time === 0) ?
@@ -126,28 +139,44 @@ export default class Zapros extends Component {
         }
         if (this.state.isLoading) {
             return (
-                    <View style={{flex: 1, paddingTop: 20}}>
+                    <View style={styles.container}>
                         <ActivityIndicator/>
+                        <Text style={styles.clocks}>
+                        --:--
+		    </Text>
+                        <Text style={styles.clocks}>
+                        --:--
+		    </Text>
+		    
                     </View>
             );
         }
         const {dataSource} = this.state;
 
+	const h=styles.clocksGreen;
+	    const hour=dataSource[0].stats.find(
+                                    isToday).hours;
+	  
+	    const styleH = ColorOfHour(hour);
         return (
-                <TouchableOpacity onPress={this.toggleDollars}>
-                    <View style={styles.container}>
-
-                        <Text style={styles.clocks}>
+                      
+		<TouchableOpacity
+                                style={styles.button}
+                                onPress={this.toggleDollars}>
+		
+                        <View style={styles.container}>
+	                       <Text style={styleH}>
                             {timeToTime(dataSource[0].stats.find(
-                                    isToday).hours, this.state.dollars)} </Text>
+                                    isToday).hours, this.state.dollars,this.props.salary)}</Text>
 
                         {dataSource.map(
-                                hit => <Text style={styles.clocks}>{timeToTime(
+                                hit => <Text style={h}>
+				{timeToTime(
                                         hit.hourWorked,
-                                        this.state.dollars)}</Text>)}
+                                        this.state.dollars,this.props.salary)}</Text>)}
 
-                    </View></TouchableOpacity>
-
+                    </View>
+		</TouchableOpacity>
         );
     }
 
@@ -160,12 +189,33 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: '#000080',
     },
-    clocks: {
+    clocksRed: {
         margin: 10,
-        fontSize: 90,
+        fontSize: 75,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#FF0000',
+    },
+    clocksYellow: {
+        margin: 10,
+        fontSize: 75,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#FFFF00',
+    },
+    clocksGreen: {
+        margin: 10,
+        fontSize: 75,
         fontWeight: 'bold',
         textAlign: 'center',
         color: '#66FF00',
-    }
+    },
+    
+	images1: {
+        width: 50,
+        height: 50,
+        //  margin: 20,
+    },
+	
 });
  

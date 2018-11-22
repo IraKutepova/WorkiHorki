@@ -52,7 +52,7 @@ export default class LoginScreen extends React.Component {
                     navigate('WorkHours', {
                         username: username,
                         password: password,
-                        loginStatus: true
+                        loginStatus: 'true'
                     });
         }
     };
@@ -60,20 +60,34 @@ export default class LoginScreen extends React.Component {
     render() {
 
         const {navigate} = this.props.navigation;
+        const {params} = this.props.navigation.state;
+	    const h= this.props.navigation.getParam('editYes','No');
+		    
+	    
         if (this.state.start) {
             this.getValueLocally_name('name');
             this.getValueLocally_password('password');
             this.setState({start: false});
-        }
-        const readName = this.state.getName;
+		this.getValueLocally_has('has');
+	}
+	    if(h==='No')
+	    {
+	    if (this.state.hasData==='true')
+	    {
+		    
+                           return     navigate('WorkHours',{username:this.state.getName,
+                                        password: this.state.getPass,
+                        loginStatus: true
+			   });
 
+}
+}
         return (
                 <View style={styles.container}>
                     <Text style={styles.paragraph}>Please, login!</Text>
 
 
-                    <Text style={styles.formText}>Name
-                    </Text>
+                    <Text style={styles.formText}>Name</Text>
 
                     <TextInput
                             style={styles.TextInputStyle}
@@ -95,7 +109,8 @@ export default class LoginScreen extends React.Component {
                             style={styles.TextInputStyle}
                             secureTextEntry={true}
                             onChangeText={(text1) => this.setState(
-                                    {pass: text1})}
+                              
+				    {pass: text1})}
 
                             underlineColorAndroid='transparent'
                             value={this.state.pass}
