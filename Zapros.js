@@ -87,8 +87,10 @@ export default class Zapros extends Component {
     }
 
     render() {
-function ColorOfHour (hours)
-	    {
+function ColorOfHour (hours,hourWorked, weekDay){
+	//if you work hard and have more hours 
+		    let hoursAv=hourWorked/weekDay; 
+		    hours+=hoursAv;
 		    if (hours<2){ return styles.clocksRed;		    
 		    }
 		    else{ if(hours<4){return styles.clocksYellow;}
@@ -100,7 +102,7 @@ function ColorOfHour (hours)
             const today = new Date();
             let day = '';
             if (today.getDate() < 10) {
-                day = '0' + today.getDate();
+                day = '0'+ today.getDate(); //for live add '0'+
             }
             else {
                 day = today.getDate();
@@ -109,6 +111,16 @@ function ColorOfHour (hours)
                     + '-' + day;
             return element.date.startsWith(daytype);
         }
+	function getWeekDay() {
+		//formula to get weekday number
+	
+		let now = new Date();
+		let onejan = new Date(now.getFullYear(), 0, 1);
+		let day = Math.floor( (((now - onejan) / 86400000) + onejan.getDay()) );
+		
+		return day%7; 
+	} 
+
 
         function timeToTime(time, dollars,salary) {
 		if (dollars) {
@@ -152,12 +164,13 @@ function ColorOfHour (hours)
             );
         }
         const {dataSource} = this.state;
+            const today = new Date();
 
 	const h=styles.clocksGreen;
 	    const hour=dataSource[0].stats.find(
                                     isToday).hours;
-	  
-	    const styleH = ColorOfHour(hour);
+	  const hourWorked = dataSource.map(hit => hit.hourWorked);
+	    const styleH = ColorOfHour(hour,hourWorked[0],getWeekDay());
         return (
                       
 		<TouchableOpacity
@@ -166,6 +179,8 @@ function ColorOfHour (hours)
 		
                         <View style={styles.container}>
 	                       <Text style={styleH}>
+		
+			
                             {timeToTime(dataSource[0].stats.find(
                                     isToday).hours, this.state.dollars,this.props.salary)}</Text>
 
@@ -174,6 +189,7 @@ function ColorOfHour (hours)
 				{timeToTime(
                                         hit.hourWorked,
                                         this.state.dollars,this.props.salary)}</Text>)}
+
 
                     </View>
 		</TouchableOpacity>

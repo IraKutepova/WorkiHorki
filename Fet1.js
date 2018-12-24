@@ -102,6 +102,7 @@ const user=this.props.navigation.state.params.username;
         };
 
         const {dataSource} = this.state;
+	    const today=new Date();
 	    const kuku='true';
 
         function _setUrl(userId, teamId, managerId) {
@@ -142,7 +143,6 @@ const user=this.props.navigation.state.params.username;
                     <View style={styles.row1}>
                         <Text style={styles.paragraph}>
                            {dataSource.fullName}
-		
                         </Text>
                         <TouchableOpacity
                                 style={styles.button}
@@ -154,7 +154,6 @@ const user=this.props.navigation.state.params.username;
                             <Image source={pic1} style={styles.images1}/>
                         </TouchableOpacity>
                     </View>
-
                     <Text style={styles.textRegister}> ___________________ </Text>
 		
                     {dataSource &&
