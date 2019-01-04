@@ -101,13 +101,22 @@ function ColorOfHour (hours,hourWorked, weekDay){
         function isToday(element, index, array) {
             const today = new Date();
             let day = '';
+		let month = '';
+
             if (today.getDate() < 10) {
-                day = '0'+ today.getDate(); //for live add '0'+
+                day ='0' + today.getDate(); //for live add '0'+
             }
             else {
                 day = today.getDate();
             }
-            const daytype = today.getFullYear() + '-' + (today.getMonth() + 1)
+		  if (today.getMonth() < 10) {
+                month ='0'+ today.getMonth(); //for live add '0'+
+            }
+            else {
+                month = today.getMonth();
+            }
+
+            const daytype = today.getFullYear() + '-' + (month + 1)
                     + '-' + day;
             return element.date.startsWith(daytype);
         }
@@ -167,8 +176,9 @@ function ColorOfHour (hours,hourWorked, weekDay){
             const today = new Date();
 
 	const h=styles.clocksGreen;
-	    const hour=dataSource[0].stats.find(
+	    let hour= dataSource[0].stats.find(
                                     isToday).hours;
+	   
 	  const hourWorked = dataSource.map(hit => hit.hourWorked);
 	    const styleH = ColorOfHour(hour,hourWorked[0],getWeekDay());
         return (
