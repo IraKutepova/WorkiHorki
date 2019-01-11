@@ -10,11 +10,11 @@ import {
 import {Constants, SecureStore} from 'expo';
 import {createStackNavigator} from 'react-navigation';
 import LoginScreen from './LoginScreen.js';
-import FetchUserData from './Fet1.js';
+import TimeScreen from './TimeScreen.js';
 
 
-const SimpleApp = createStackNavigator({
-
+const TimeApp = createStackNavigator({
+// at the home page you need to login to the app
     Home: {
 
         screen: LoginScreen,
@@ -23,8 +23,9 @@ const SimpleApp = createStackNavigator({
 
         }
     },
-    WorkHours: {
-        screen: FetchUserData,
+// it shows you your spent working hours and earned moneys
+    TimeScreen: {
+        screen: TimeScreen,
         navigationOptions: {
             header: null,
         }
@@ -33,10 +34,10 @@ const SimpleApp = createStackNavigator({
 });
 
 
-// noinspection JSUnusedGlobalSymbols
+// started from home page
 export default class App extends React.Component {
     render() {
-        return <SimpleApp/>;
+        return <TimeApp/>;
     }
 }
 

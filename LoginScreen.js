@@ -47,9 +47,9 @@ export default class LoginScreen extends React.Component {
     _navigate = (username, password) => {
         const {navigate} = this.props.navigation;
         {
-            (username === '') ? alert('These fields are required!') :
+            ((username === '') || (password==='')) ? alert('These fields are required!') :
 
-                    navigate('WorkHours', {
+                    navigate('TimeScreen', {
                         username: username,
                         password: password,
                         loginStatus: 'true'
@@ -61,7 +61,8 @@ export default class LoginScreen extends React.Component {
 
         const {navigate} = this.props.navigation;
         const {params} = this.props.navigation.state;
-	    const h= this.props.navigation.getParam('editYes','No');
+	   //if you navigate here from timescreen it will be yes
+	    let toEditLoginForm= this.props.navigation.getParam('editLoginForm','No');
 		    
 	    
         if (this.state.start) {
@@ -70,12 +71,12 @@ export default class LoginScreen extends React.Component {
             this.setState({start: false});
 		this.getValueLocally_has('has');
 	}
-	    if(h==='No')
+	    if(toEditLoginForm==='No')
 	    {
 	    if (this.state.hasData==='true')
 	    {
 		    
-                           return     navigate('WorkHours',{username:this.state.getName,
+                           return     navigate('TimeScreen',{username:this.state.getName,
                                         password: this.state.getPass,
                         loginStatus: true
 			   });
@@ -85,10 +86,7 @@ export default class LoginScreen extends React.Component {
         return (
                 <View style={styles.container}>
                     <Text style={styles.paragraph}>Please, login!</Text>
-
-
-                    <Text style={styles.formText}>Name</Text>
-
+                   <Text style={styles.formText}>Name</Text>
                     <TextInput
                             style={styles.TextInputStyle}
                             onChangeText={(text) => this.setState({name: text})}
@@ -98,10 +96,8 @@ export default class LoginScreen extends React.Component {
                             editable={true}
                             maxLength={40}
                     >
-
                     </TextInput>
                     <Text style={styles.formText}>
-
                         Password
                     </Text>
 
@@ -109,8 +105,7 @@ export default class LoginScreen extends React.Component {
                             style={styles.TextInputStyle}
                             secureTextEntry={true}
                             onChangeText={(text1) => this.setState(
-                              
-				    {pass: text1})}
+                              				    {pass: text1})}
 
                             underlineColorAndroid='transparent'
                             value={this.state.pass}
