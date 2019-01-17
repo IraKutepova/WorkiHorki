@@ -151,7 +151,7 @@ export default class GetUserData extends Component {
                     <View style={styles.container}>
                         <Text style={styles.errorText}>
                             Sorry! Can not read data.
-		    Error: {this.state.errorNumber}
+		    Error: {this.state.start1}
                         </Text>
 
 
