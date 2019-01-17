@@ -107,7 +107,7 @@ export default class GetUserData extends Component {
             if ( day<10) {
                 day ='0'+ today.getDate(); //for live add '0'+
             }
-		  if (today.getMonth() < 10) {
+		  if (month < 10) {
                 month ='0'+ month; //for live add '0'+
             }
 
