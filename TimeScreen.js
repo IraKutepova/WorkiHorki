@@ -21,39 +21,27 @@ export default class TimeScreen extends Component {
 
         this.state = {
             isLoading: true,
-            errorLoading: false,
+            erLoading: false,
             start: true,
-
+		error:0,
+user:this.props.navigation.state.params.username,
+		pass: this.props.navigation.state.params.password, 
+		erNumber: 0,
         }
     }
-	//get user name from secure store
-    getValueLocally_name = async (key) => {
-        await SecureStore.getItemAsync(key).then(
-                (value) => this.setState({getName1: value}))
-
-    };
-	//get user password from secure store
-
-    getValueLocally_password = async (key) => {
-        await SecureStore.getItemAsync(key).then(
-                (value) => this.setState({getPass1: value}))
-
-    };
-
     componentDidMount() {
+
 	  return  this.getFetch();
     }
 	//get user data
-	getFetch(){
 		//this values was send to this class from LoginScreen
-const user=this.props.navigation.state.params.username;
-	    const pass=this.props.navigation.state.params.password;
-      
-	    
+	//
+	getFetch(){
+		
         return fetch('http://185.185.70.210:8081/api/detail', {
             method: 'GET',
             headers: {
-                'Authorization': 'Basic ' + Base64.btoa(user+ ':' + pass),
+                'Authorization': 'Basic ' + Base64.btoa(this.state.user+ ':' + this.state.pass),
                 'Content-Type': 'application/json',
             }
         })
@@ -61,10 +49,10 @@ const user=this.props.navigation.state.params.username;
             if (response.status !== 200) {
                 return (Promise.reject(new Error(response.statusText)),
                                 this.setState({
-                                    errorLoading: true,
+                                    erLoading: true,
                                     isLoading: false,
+                                    erNumber: response.status,
 
-                                    errorNumber: response.status
                                 })
                 )
             }
@@ -75,16 +63,16 @@ const user=this.props.navigation.state.params.username;
         .then((responseJson) => {
             this.setState({
                 isLoading: false,
-                errorLoading: false,
+                erLoading: false,
                 dataSource: responseJson,
-                errorNumber: false,
+		    erNumber: 1,
             }, function () {
 
             });
         })
         .catch((error) => {
             this.setState({
-                error: error
+                error: 1,
             });
         });
 
@@ -105,11 +93,11 @@ const user=this.props.navigation.state.params.username;
 
         const {dataSource} = this.state;
 	    
-        if (this.state.errorLoading) {
+        if (this.state.erLoading) {
            return (
                     <View style={styles.container}>
                         <Text style={styles.paragraph}>
-                            Upss... Error: {this.state.errorNumber}
+                            Upss... Error: {this.state.erNumber}
                         </Text>
                         <Text style={styles.paragraph}>
                             {params.username}
@@ -128,14 +116,22 @@ const user=this.props.navigation.state.params.username;
             );
         }
 
-        if (this.state.isLoading) {
+        if (!this.state.isLoading) {
             return (
                     <View style={styles.container}>
                         <ActivityIndicator/>
                     </View>
             );
         }
-   
+	    if (this.state.erNumber==0) {
+	    return (
+                    <View style={styles.container}>
+                        <Text style={styles.paragraph}>
+                            Server is sleaping! Sorry!
+                        </Text>
+			</View>	    
+	    );}
+	    else{
      return (
                 <View style={styles.container}>
                     <View style={styles.row1}>
@@ -170,7 +166,7 @@ const user=this.props.navigation.state.params.username;
 
         );
      
-    }
+    }}
 }
 
 const styles = StyleSheet.create({
